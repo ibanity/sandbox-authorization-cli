@@ -24,8 +24,8 @@ when "account-information-access"
       options[:user_password] = v
     end
 
-    parser.on("-a", "--account-reference ACCOUNT_REFERENCE", "Reference value of the financial institution account to be authorized (NOT THE UUID)") do |v|
-      options[:account_reference] = v
+    parser.on("-a", "--account-references ACCOUNT_REFERENCE,ACCOUNT_REFERENCE_2,ACCOUNT_REFERENCE_3", "Comma-separated list of reference values for the financial institution accounts to be authorized (not their UUIDs)") do |v|
+      options[:account_references] = v
     end
 
     parser.on("-r", "--account-information-access-request-redirect-link ACCOUNT_INFORMATION_ACCESS_REQUEST_REDIRECT_LINK", "Redirect URI from the created account information access request") do |v|
@@ -41,10 +41,13 @@ Available commands are:
 See 'authorize.rb COMMAND --help' for more information on a specific command.")
 end
 
-[:financial_institution_id, :user_login, :user_password, :account_reference, :account_information_access_request_redirect_link].each do |argument|
+
+[:financial_institution_id, :user_login, :user_password, :account_references, :account_information_access_request_redirect_link].each do |argument|
   raise OptionParser::MissingArgument.new(argument) if options[argument].nil?
 end
 
-AccountInformationAccessAuthorization.new(financial_institution_id: options[:financial_institution_id], user_login: options[:user_login], user_password: options[:user_password], account_reference: options[:account_reference], account_information_access_request_redirect_link: options[:account_information_access_request_redirect_link]).execute
+account_references = options[:account_references].split(",")
+
+AccountInformationAccessAuthorization.new(financial_institution_id: options[:financial_institution_id], user_login: options[:user_login], user_password: options[:user_password], account_references: account_references, account_information_access_request_redirect_link: options[:account_information_access_request_redirect_link]).execute
 
 puts "Your authorization has been submitted."

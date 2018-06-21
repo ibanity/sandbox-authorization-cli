@@ -3,11 +3,11 @@ require "uri"
 require "rest-client"
 
 class AccountInformationAccessAuthorization
-  def initialize(financial_institution_id:, user_login:, user_password:, account_reference:, account_information_access_request_redirect_link:)
+  def initialize(financial_institution_id:, user_login:, user_password:, account_references:, account_information_access_request_redirect_link:)
     @financial_institution_id = financial_institution_id
     @user_login = user_login
     @user_password = user_password
-    @account_reference = account_reference
+    @account_references = account_references
     @account_information_access_request_redirect_link = account_information_access_request_redirect_link
   end
 
@@ -86,9 +86,7 @@ private
         data: {
           type: "accountInformationAccessRequest",
           attributes: {
-            requestedAccountReferences: [
-              @account_reference
-            ]
+            requestedAccountReferences: @account_references
           }
         }
       },
