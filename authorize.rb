@@ -7,7 +7,7 @@ command = ARGV[0]
 case command
 when "account-information-access"
   OptionParser.new do |parser|
-    parser.banner = "Usage: ruby authorize.rb account-information-access [arguments]"
+    parser.banner = "Usage: account-information-access [arguments]"
     parser.on("-h", "--help", "Show this help message") do ||
       puts parser
       exit
@@ -33,12 +33,12 @@ when "account-information-access"
     end
   end.parse!
 else
-  abort("Usage: authorize.rb command [arguments]
+  abort("Usage: command [arguments]
 
 Available commands are:
  account-information-access :     authorizes a created account information access request
 
-See 'authorize.rb COMMAND --help' for more information on a specific command.")
+See 'COMMAND --help' for more information on a specific command.")
 end
 
 
