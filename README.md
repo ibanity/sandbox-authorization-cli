@@ -17,7 +17,7 @@ account-information-access \
 -a ACCOUNT_REFERENCE,ACCOUNT_REFERENCE_2,ACCOUNT_REFERENCE_3 \
 -r ACCOUNT_INFORMATION_ACCESS_REQUEST_REDIRECT_LINK \
 -d HOST_DOMAIN* \
--s SSL_CA_FILE* \
+-s SSL_CA_FILE*
 ```
 
-* optional
+\* optional arguments
