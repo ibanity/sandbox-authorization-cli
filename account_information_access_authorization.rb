@@ -3,12 +3,14 @@ require "uri"
 require "rest-client"
 
 class AccountInformationAccessAuthorization
-  def initialize(financial_institution_id:, user_login:, user_password:, account_references:, account_information_access_request_redirect_link:)
+  def initialize(financial_institution_id:, user_login:, user_password:, account_references:, account_information_access_request_redirect_link:, host_domain: "ibanity.com", ssl_ca_file: nil)
     @financial_institution_id = financial_institution_id
     @user_login = user_login
     @user_password = user_password
     @account_references = account_references
     @account_information_access_request_redirect_link = account_information_access_request_redirect_link
+    @host_domain = host_domain
+    @ssl_ca_file = ssl_ca_file
   end
 
   def execute
@@ -27,14 +29,17 @@ private
       method: :get,
       url: @account_information_access_request_redirect_link,
       max_redirects: 0,
-      verify_ssl: false
+      ssl_ca_file: @ssl_ca_file
     }
+
     begin
       RestClient::Request.execute(query)
     rescue RestClient::ExceptionWithResponse => err
     end
+
     redirect = err.response.headers[:location]
     redirect_parameters = URI.decode_www_form(URI.parse(redirect).query).to_h
+
     @redirect_uri = redirect_parameters["redirectUri"]
     @application_id = redirect_parameters["applicationId"]
     @sandbox_account_information_access_request_id = redirect.match(/\/account-information-access-requests\/(.+)\?/)[1]
@@ -50,6 +55,7 @@ private
         }
       }
     }
+
     response = consent_api_call(method: :post, endpoint: "authentications", payload: payload)
     @authentication_id = response["data"]["id"]
   end
@@ -64,6 +70,7 @@ private
         }
       }
     }
+
     response = consent_api_call(method: :post, endpoint: "verifications", payload: payload)
     @session_token = response["data"]["attributes"]["sessionToken"]
   end
@@ -112,7 +119,7 @@ private
     redirect_url = response["data"]["attributes"]["redirectUri"]
 
     begin
-      RestClient::Request.execute({method: :get, max_redirects: 0, url: redirect_url, verify_ssl: false})
+      RestClient::Request.execute({ method: :get, max_redirects: 0, url: redirect_url, ssl_ca_file: @ssl_ca_file })
     rescue RestClient::ExceptionWithResponse => err
     end
   end
@@ -125,8 +132,8 @@ private
     basic_headers.merge!({ authorization: "Bearer #{@session_token}"}) if headers
     response = RestClient::Request.execute({
       method: method,
-      url: "https://sandbox-authorization.ibanity.com/api/financial-institutions/#{@financial_institution_id}/#{endpoint}",
-      verify_ssl: false,
+      url: "https://sandbox-authorization.#{@host_domain}/api/financial-institutions/#{@financial_institution_id}/#{endpoint}",
+      ssl_ca_file: @ssl_ca_file,
       payload: payload ? payload.to_json : nil,
       headers: basic_headers
     })

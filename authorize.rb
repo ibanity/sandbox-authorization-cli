@@ -31,6 +31,15 @@ when "account-information-access"
     parser.on("-r", "--account-information-access-request-redirect-link ACCOUNT_INFORMATION_ACCESS_REQUEST_REDIRECT_LINK", "Redirect URI from the created account information access request") do |v|
       options[:account_information_access_request_redirect_link] = v
     end
+
+    options[:host_domain] = "ibanity.com"
+    parser.on("-d", "--host-domain HOST_DOMAIN", "[OPTIONAL] Custom Sandbox Authorization host domain (default: ibanity.com)") do |v|
+      options[:host_domain] = v
+    end
+
+    parser.on("-s", "--ssl-ca-file SSL_CA_FILE", "[OPTIONAL] CA file when using a custom host domain") do |v|
+      options[:ssl_ca_file] = v
+    end
   end.parse!
 else
   abort("Usage: command [arguments]
@@ -41,13 +50,12 @@ Available commands are:
 See 'COMMAND --help' for more information on a specific command.")
 end
 
-
 [:financial_institution_id, :user_login, :user_password, :account_references, :account_information_access_request_redirect_link].each do |argument|
   raise OptionParser::MissingArgument.new(argument) if options[argument].nil?
 end
 
 account_references = options[:account_references].split(",")
 
-AccountInformationAccessAuthorization.new(financial_institution_id: options[:financial_institution_id], user_login: options[:user_login], user_password: options[:user_password], account_references: account_references, account_information_access_request_redirect_link: options[:account_information_access_request_redirect_link]).execute
+AccountInformationAccessAuthorization.new(financial_institution_id: options[:financial_institution_id], user_login: options[:user_login], user_password: options[:user_password], account_references: account_references, account_information_access_request_redirect_link: options[:account_information_access_request_redirect_link], ssl_ca_file: options[:ssl_ca_file], host_domain: options[:host_domain]).execute
 
 puts "Your authorization has been submitted."
