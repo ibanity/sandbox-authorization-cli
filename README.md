@@ -8,11 +8,6 @@ Once the account information access request has been authorized, you can reach t
 
 An image of this CLI is available on [Docker Hub](https://hub.docker.com/r/ibanity/sandbox-authorization-cli/).
 
-## Setup
-```
-$ docker build -t sandbox-authorization-cli .
-```
-
 ## Run
 In order to authorize your account information access request, you will need to provide:
 * the uuid of the financial institution it was created for
@@ -21,7 +16,7 @@ In order to authorize your account information access request, you will need to 
 * the redirect link returned when you created the account information access request
 
 ```
-$ docker run --rm sandbox-authorization-cli \
+$ docker run ibanity/sandbox-authorization-cli:latest \
 account-information-access \
 -f FINANCIAL_INSTITUTION_ID \
 -l USER_LOGIN \
