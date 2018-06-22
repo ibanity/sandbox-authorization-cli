@@ -3,13 +3,13 @@ require "uri"
 require "rest-client"
 
 class AccountInformationAccessAuthorization
-  def initialize(financial_institution_id:, user_login:, user_password:, account_references:, account_information_access_request_redirect_link:, host_domain: "ibanity.com", ssl_ca_file: nil)
+  def initialize(financial_institution_id:, user_login:, user_password:, account_references:, account_information_access_request_redirect_link:, host: "sandbox-authorization.ibanity.com", ssl_ca_file: nil)
     @financial_institution_id = financial_institution_id
     @user_login = user_login
     @user_password = user_password
     @account_references = account_references
     @account_information_access_request_redirect_link = account_information_access_request_redirect_link
-    @host_domain = host_domain
+    @host = host
     @ssl_ca_file = ssl_ca_file
   end
 
@@ -126,13 +126,13 @@ private
 
   def consent_api_call(method:, endpoint:, headers: false, payload: {}, skip_parse: false)
     basic_headers = {
-      content_type:  :json,
-      accept:        :json
+      content_type: :json,
+      accept: :json
     }
     basic_headers.merge!({ authorization: "Bearer #{@session_token}"}) if headers
     response = RestClient::Request.execute({
       method: method,
-      url: "https://sandbox-authorization.#{@host_domain}/api/financial-institutions/#{@financial_institution_id}/#{endpoint}",
+      url: "https://#{@host}/api/financial-institutions/#{@financial_institution_id}/#{endpoint}",
       ssl_ca_file: @ssl_ca_file,
       payload: payload ? payload.to_json : nil,
       headers: basic_headers

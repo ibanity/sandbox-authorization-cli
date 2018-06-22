@@ -32,9 +32,9 @@ when "account-information-access"
       options[:account_information_access_request_redirect_link] = v
     end
 
-    options[:host_domain] = "ibanity.com"
-    parser.on("-d", "--host-domain HOST_DOMAIN", "[OPTIONAL] Custom Sandbox Authorization host domain (default: ibanity.com)") do |v|
-      options[:host_domain] = v
+    options[:host] = "sandbox-authorization.ibanity.com"
+    parser.on("-o", "--host HOST", "[OPTIONAL] Custom Sandbox Authorization host (default: sandbox-authorization.ibanity.com)") do |v|
+      options[:host] = v
     end
 
     parser.on("-s", "--ssl-ca-file SSL_CA_FILE", "[OPTIONAL] CA file when using a custom host domain") do |v|
@@ -56,6 +56,6 @@ end
 
 account_references = options[:account_references].split(",")
 
-AccountInformationAccessAuthorization.new(financial_institution_id: options[:financial_institution_id], user_login: options[:user_login], user_password: options[:user_password], account_references: account_references, account_information_access_request_redirect_link: options[:account_information_access_request_redirect_link], ssl_ca_file: options[:ssl_ca_file], host_domain: options[:host_domain]).execute
+AccountInformationAccessAuthorization.new(financial_institution_id: options[:financial_institution_id], user_login: options[:user_login], user_password: options[:user_password], account_references: account_references, account_information_access_request_redirect_link: options[:account_information_access_request_redirect_link], ssl_ca_file: options[:ssl_ca_file], host: options[:host]).execute
 
 puts "Your authorization has been submitted."
