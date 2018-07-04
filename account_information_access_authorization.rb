@@ -3,14 +3,13 @@ require "uri"
 require "rest-client"
 
 class AccountInformationAccessAuthorization
-  def initialize(financial_institution_id:, user_login:, user_password:, account_references:, account_information_access_request_redirect_link:, host: "sandbox-authorization.ibanity.com", ssl_ca_file: nil)
+  def initialize(financial_institution_id:, user_login:, user_password:, account_references:, account_information_access_request_redirect_link:, host: "sandbox-authorization.ibanity.com")
     @financial_institution_id = financial_institution_id
     @user_login = user_login
     @user_password = user_password
     @account_references = account_references
     @account_information_access_request_redirect_link = account_information_access_request_redirect_link
     @host = host
-    @ssl_ca_file = ssl_ca_file
   end
 
   def execute
@@ -28,8 +27,7 @@ private
     query = {
       method: :get,
       url: @account_information_access_request_redirect_link,
-      max_redirects: 0,
-      ssl_ca_file: @ssl_ca_file
+      max_redirects: 0
     }
 
     begin
@@ -119,7 +117,7 @@ private
     redirect_url = response["data"]["attributes"]["redirectUri"]
 
     begin
-      RestClient::Request.execute({ method: :get, max_redirects: 0, url: redirect_url, ssl_ca_file: @ssl_ca_file })
+      RestClient::Request.execute({ method: :get, max_redirects: 0, url: redirect_url })
     rescue RestClient::ExceptionWithResponse => err
     end
   end
@@ -133,7 +131,6 @@ private
     response = RestClient::Request.execute({
       method: method,
       url: "https://#{@host}/api/financial-institutions/#{@financial_institution_id}/#{endpoint}",
-      ssl_ca_file: @ssl_ca_file,
       payload: payload ? payload.to_json : nil,
       headers: basic_headers
     })
