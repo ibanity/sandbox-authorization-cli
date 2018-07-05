@@ -36,7 +36,6 @@ $ docker run \
 --add-host {sandbox_authorization_host}:172.172.172.172 \
 sandbox-authorization-cli:latest \
 account-information-access \
-account-information-access \
 -f FINANCIAL_INSTITUTION_ID \
 -l USER_LOGIN \
 -p USER_PASSWORD \
