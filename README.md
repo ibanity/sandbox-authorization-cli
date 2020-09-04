@@ -12,7 +12,7 @@ An image of this CLI is available on [Docker Hub](https://hub.docker.com/r/ibani
 In order to authorize your account information access request, you will need to provide:
 * the uuid of the financial institution it was created for
 * the financial institution user's login and password
-* the references (*not uuids*) of the accounts to authorize
+* the references (*not uuids*) of the accounts to authorize (and their currencies - `EUR` by default, separated from the reference by `#`)
 * the redirect link returned when you created the account information access request
 
 ```
@@ -21,7 +21,7 @@ account-information-access \
 -f FINANCIAL_INSTITUTION_ID \
 -l USER_LOGIN \
 -p USER_PASSWORD \
--a ACCOUNT_REFERENCE,ACCOUNT_REFERENCE_2,ACCOUNT_REFERENCE_3 \
+-a ACCOUNT_REFERENCE#CURRENCY,ACCOUNT_REFERENCE_2#CURRENCY,ACCOUNT_REFERENCE_3#CURRENCY \
 -r ACCOUNT_INFORMATION_ACCESS_REQUEST_REDIRECT_LINK \
 ```
 

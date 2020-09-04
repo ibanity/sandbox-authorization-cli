@@ -50,7 +50,10 @@ end
   raise OptionParser::MissingArgument.new(argument) if options[argument].nil?
 end
 
-account_references = options[:account_references].split(",")
+account_references =
+  options[:account_references]
+  .split(",")
+  .map{|reference| reference.include?("#") ? reference : "#{reference}#EUR" }
 
 AccountInformationAccessAuthorization.new(financial_institution_id: options[:financial_institution_id], user_login: options[:user_login], user_password: options[:user_password], account_references: account_references, account_information_access_request_redirect_link: options[:account_information_access_request_redirect_link], host: options[:host]).execute
 
